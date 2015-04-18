@@ -5,7 +5,8 @@ var gulp           = require('gulp'),
     concat         = require('gulp-concat'),
     LIB_FILES      = ['bower_components/phaser/build/phaser.min.js'],
     SCRIPT_FILES   = ['src/js/**/*.js'],
-    TEMPLATE_FILES = ['src/templates/**/*.jade'];
+    TEMPLATE_FILES = ['src/templates/**/*.jade'],
+    ASSET_FILES    = ['src/assets/**/*'];
 
 gulp.task('lint', function() {
     gulp.src(SCRIPT_FILES)
@@ -34,9 +35,16 @@ gulp.task('templates', function () {
         .pipe(connect.reload());
 });
 
+gulp.task('assets', function () {
+    gulp.src(ASSET_FILES)
+        .pipe(gulp.dest('public/assets'))
+        .pipe(connect.reload());
+});
+
 gulp.task('watch', ['build'], function () {
     gulp.watch(SCRIPT_FILES, ['scripts']);
     gulp.watch(TEMPLATE_FILES, ['templates']);
+    gulp.watch(ASSET_FILES, ['assets']);
 });
 
 gulp.task('server', function () {
@@ -46,6 +54,6 @@ gulp.task('server', function () {
     });
 });
 
-gulp.task('build', ['templates', 'scripts', 'libs']);
+gulp.task('build', ['templates', 'scripts', 'libs', 'assets']);
 
 gulp.task('default', ['watch', 'server']);
