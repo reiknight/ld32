@@ -1,0 +1,19 @@
+{
+  "name": "ld32",
+  "version": "0.0.0",
+  "homepage": "https://github.com/reiknight/ld32",
+  "authors": [
+    "ultrayoshi <david.morcillo@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "phaser": "~2.3.0"
+  }
+}
