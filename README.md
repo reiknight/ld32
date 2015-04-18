@@ -12,5 +12,9 @@ Dependencies
 How to
 ------
 
+* Install dependencies:
+  $ npm install
+  $ bower install
+
 * Run development server:
   $ gulp
