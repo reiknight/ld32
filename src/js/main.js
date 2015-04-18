@@ -39,7 +39,11 @@
         if(cursors.right.isDown) {
             player.body.velocity.x += PLAYER_VELOCITY;
         }
+        if(cursors.up.isDown && player.body.touching.down) {
+            player.body.velocity.y = -PLAYER_VELOCITY;
+        }
         
+        //Checking collisions
     }
     
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {preload: preload, create: create, update: update});
