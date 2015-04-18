@@ -1,7 +1,8 @@
 (function () {
     "use strict";
 
-    var PLAYER_VELOCITY = 150;
+    var PLAYER_VELOCITY = 150,
+        JUMP_VELOCITY   = -225;
 
     var map,
         layer,
@@ -42,12 +43,17 @@
         player.body.bounce.y = 0.2;
         player.body.gravity.y = 300;
         player.body.collideWorldBounds = true;
+        
+        map.setCollisionBetween(1, 2, true, layer.index, true);
 
         //Initializing input
         cursors = game.input.keyboard.createCursorKeys();
     }
 
     function update() {
+        //Checking collisions
+        game.physics.arcade.collide(player, layer);
+        
         //Checking input
         player.body.velocity.x = 0;
 
@@ -57,11 +63,9 @@
         if(cursors.right.isDown) {
             player.body.velocity.x += PLAYER_VELOCITY;
         }
-        if(cursors.up.isDown && player.body.touching.down) {
-            player.body.velocity.y = -PLAYER_VELOCITY;
+        if(cursors.up.isDown && player.body.blocked.down) {
+            player.body.velocity.y = JUMP_VELOCITY;
         }
-
-        //Checking collisions
     }
 
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {preload: preload, create: create, update: update});
