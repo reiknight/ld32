@@ -15,7 +15,7 @@
         timeTxt;
 
     function preload() {
-        game.load.image('player', '/assets/images/star.png');
+        game.load.spritesheet('player', '/assets/images/hero.png', 20, 40);
         game.load.tilemap('test_map', '/assets/levels/test.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', '/assets/images/basic_tileset.png');
         game.load.audio('main_music', '/assets/music/maintheme.ogg');
@@ -80,9 +80,11 @@
 
         if(cursors.left.isDown) {
             player.body.velocity.x -= PLAYER_VELOCITY;
+            player.frame = 0;
         }
         if(cursors.right.isDown) {
             player.body.velocity.x += PLAYER_VELOCITY;
+            player.frame = 3;
         }
 
         if(cursors.up.isDown && player.body.blocked.down) {
