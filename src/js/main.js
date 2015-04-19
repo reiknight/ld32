@@ -1,5 +1,7 @@
-(function () {
+(function (exports) {
     "use strict";
+
+    var LAGMAN = exports.LAGMAN || {};
 
     var PLAYER_VELOCITY = 150,
         ENEMY_VELOCITY  = 30,
@@ -178,6 +180,16 @@
         }
     }
 
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {preload: preload, create: create, update: update});
+    var playState = {
+        preload: preload,
+        create: create,
+        update: update
+    };
 
-}());
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
+
+    game.state.add('start', LAGMAN.startState);
+    game.state.add('play', playState);
+
+    game.state.start('start');
+}(window));
