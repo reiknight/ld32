@@ -117,9 +117,9 @@
     function checkEnemyMovement(enemy, tile) {
         if(tile.faceLeft && tile.faceRight) {
             enemy.body.velocity.x = 0;
-        } else if(tile.faceLeft) {
+        } else if(tile.faceLeft && tile.left + tile.width/10 > enemy.left) {
             enemy.body.velocity.x = ENEMY_VELOCITY;
-        } else if(tile.faceRight) {
+        } else if(tile.faceRight && tile.right - tile.width/10 < enemy.right) {
             enemy.body.velocity.x = -ENEMY_VELOCITY;
         }
     }
@@ -137,6 +137,7 @@
             player.body.velocity.x -= PLAYER_VELOCITY;
             player.frame = 0;
         }
+        
         if(cursors.right.isDown) {
             player.body.velocity.x += PLAYER_VELOCITY;
             player.frame = 3;
@@ -144,10 +145,6 @@
 
         if(cursors.up.isDown && player.body.blocked.down) {
             player.body.velocity.y = JUMP_VELOCITY;
-        }
-        
-        if(cursors.down.isDown) {
-            console.log(player.body.touching);
         }
 
         if (player.y > game.world.height) {
@@ -173,7 +170,7 @@
         }
 
         if (lagTimer > lagTime) {
-            //setLagPosition();
+            setLagPosition();
             lagTimer = 0;
         }
     }
