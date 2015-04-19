@@ -12,11 +12,13 @@
         music,
         pingTxt,
         levelTxt,
-        timeTxt;
+        timeTxt,
+        i,
+        l;
 
     function preload() {
         game.load.spritesheet('player', '/assets/images/hero.png', 20, 40);
-        game.load.tilemap('test_map', '/assets/levels/test.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('level11', '/assets/levels/level11.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', '/assets/images/basic_tileset.png');
         game.load.audio('main_music', '/assets/music/maintheme.ogg');
         game.load.bitmapFont('carrier_command', '/assets/fonts/carrier_command.png', '/assets/fonts/carrier_command.xml');
@@ -27,8 +29,8 @@
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //The 'test_map' key here is the Loader key given in game.load.tilemap
-        map = game.add.tilemap('test_map');
-
+        map = game.add.tilemap('level11');
+console.log(map);
         //The first parameter is the tileset name, as specified in the Tiled map editor (and in the tilemap json file)
         //The second parameter maps this name to the Phaser.Cache key 'tiles'
         map.addTilesetImage('basic_tileset', 'tiles');
@@ -41,17 +43,6 @@
         //This resizes the game world to match the layer dimensions
         layerBg.resizeWorld();
         layerFg.resizeWorld();
-
-        //Adding our hero
-        player = game.add.sprite(400, 300, 'player');
-        player.anchor.setTo(0.5, 0.5);
-
-        //Physics and hero must interact
-        game.physics.arcade.enable(player);
-
-        player.body.bounce.y = 0.2;
-        player.body.gravity.y = 300;
-        player.body.collideWorldBounds = false;
 
         map.setCollisionBetween(1, 2, true, layerFg.index, true);
 
@@ -69,6 +60,20 @@
         game.time.events.loop(1000, function () {
             pingTxt.text = "Ping: " + game.rnd.integerInRange(300, 9999) + " ms";
         });
+
+        for (i = 0, l = map.objects["Logic"].length; i < l; i += 1) {
+            if (map.objects["Logic"][i].name === 'player') {
+                //Adding our hero
+                player = game.add.sprite(map.objects["Logic"][i].x, map.objects["Logic"][i].y - map.tileHeight, 'player');
+                player.anchor.setTo(0.5, 0.5);
+                //Physics and hero must interact
+                game.physics.arcade.enable(player);
+                player.body.bounce.y = 0.2;
+                player.body.gravity.y = 300;
+                player.body.collideWorldBounds = false;
+                player.frame = 3;
+            }
+        }
     }
 
     function update() {
