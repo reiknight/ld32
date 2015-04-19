@@ -9,13 +9,17 @@
         layerFg,
         player,
         cursors,
-        music;
+        music,
+        pingTxt,
+        levelTxt,
+        timeTxt;
 
     function preload() {
         game.load.image('player', '/assets/images/star.png');
         game.load.tilemap('test_map', '/assets/levels/test.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', '/assets/images/basic_tileset.png');
         game.load.audio('main_music', '/assets/music/maintheme.ogg');
+        game.load.bitmapFont('carrier_command', '/assets/fonts/carrier_command.png', '/assets/fonts/carrier_command.xml');
     }
 
     function create() {
@@ -57,6 +61,14 @@
         //Playing music
         music = game.add.audio("main_music", 1, true);
         //music.play();
+
+        pingTxt = game.add.bitmapText(5, 5, 'carrier_command','Ping: 9999 ms',11);
+        levelTxt = game.add.bitmapText(530, 5, 'carrier_command','Level: 1-1',11);
+        timeTxt = game.add.bitmapText(680, 5, 'carrier_command','Time: 99',11);
+
+        game.time.events.loop(1000, function () {
+            pingTxt.text = "Ping: " + game.rnd.integerInRange(300, 9999) + " ms";
+        });
     }
 
     function update() {
