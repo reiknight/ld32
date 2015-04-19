@@ -8,12 +8,14 @@
         layerBg,
         layerFg,
         player,
-        cursors;
+        cursors,
+        music;
 
     function preload() {
         game.load.image('player', '/assets/images/star.png');
         game.load.tilemap('test_map', '/assets/levels/test.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', '/assets/images/basic_tileset.png');
+        game.load.audio('main_music', '/assets/music/maintheme.ogg');
     }
 
     function create() {
@@ -51,6 +53,10 @@
 
         //Initializing input
         cursors = game.input.keyboard.createCursorKeys();
+        
+        //Playing music
+        music = game.add.audio("main_music", 1, true);
+        music.play();
     }
 
     function update() {
