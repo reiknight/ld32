@@ -44,10 +44,14 @@
             });
             game.add.bitmapText(430, 280, 'carrier_command', 'Start game', 18);
 
-            createButton(game, 400, 350);
+            createButton(game, 400, 350, function () {
+                game.state.start('how_to_play');
+            });
             game.add.bitmapText(424, 380, 'carrier_command', 'How to play', 18);
 
-            createButton(game, 400, 450);
+            createButton(game, 400, 450, function (){
+                game.state.start('credits');
+            });
             game.add.bitmapText(460, 480, 'carrier_command', 'Credits', 18);
 
 
