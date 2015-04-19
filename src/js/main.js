@@ -8,6 +8,7 @@
         layerBg,
         layerFg,
         player,
+        lagTimer,
         lagTime,
         lagFactor,
         laggedPosition,
@@ -30,8 +31,9 @@
     }
 
     function create() {
-        lagTime = 1000;
+        lagTime = game.rnd.integerInRange(300, 3000);
         lagFactor = 2;
+        lagTimer = 0;
 
         //Adding physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -61,24 +63,13 @@
         music = game.add.audio("main_music", 1, true);
         //music.play();
 
-        pingTxt = game.add.bitmapText(5, 5, 'carrier_command','Ping: 9999 ms',11);
+        pingTxt = game.add.bitmapText(5, 5, 'carrier_command', 'Ping: ' + lagTime + ' ms',11);
         levelTxt = game.add.bitmapText(530, 5, 'carrier_command','Level: 1-1',11);
         timeTxt = game.add.bitmapText(680, 5, 'carrier_command','Time: 99',11);
 
-        game.time.events.loop(1000, function () {
-            pingTxt.text = "Ping: " + game.rnd.integerInRange(300, 9999) + " ms";
-        });
-
-        game.time.events.loop(lagTime / lagFactor, function () {
-            if (!laggedPosition) {
-                laggedPosition = { x: player.x, y: player.y };
-            }
-        });
-
-        game.time.events.loop(lagTime, function () {
-            player.x = laggedPosition.x;
-            player.y = laggedPosition.y;
-            laggedPosition = null;
+        game.time.events.loop(5000, function () {
+            lagTime = game.rnd.integerInRange(300, 3000);
+            pingTxt.text = "Ping: " + lagTime + " ms";
         });
 
         for (i = 0, l = map.objects["Logic"].length; i < l; i += 1) {
@@ -103,6 +94,18 @@
                 enemy.body.collideWorldBounds = false;
             }
         }
+    }
+
+    function computeLagPosition() {
+        if (!laggedPosition) {
+            laggedPosition = { x: player.x, y: player.y };
+        }
+    }
+
+    function setLagPosition() {
+        player.x = laggedPosition.x;
+        player.y = laggedPosition.y;
+        laggedPosition = null;
     }
 
     function update() {
@@ -140,6 +143,17 @@
 
         if (player.x < 0) {
             player.x = game.world.width;
+        }
+
+        lagTimer += game.time.elapsed;
+
+        if (lagTimer > lagTime / lagFactor) {
+            computeLagPosition();
+        }
+
+        if (lagTimer > lagTime) {
+            setLagPosition();
+            lagTimer = 0;
         }
     }
 
