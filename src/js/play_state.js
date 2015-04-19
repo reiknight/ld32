@@ -41,12 +41,6 @@
         bullet.kill();
     }
 
-    function killEnemy(player, enemy) {
-        player.score += lagTime;
-        enemy.body = null;
-        enemy.animations.play('die', null, false, true);
-    }
-
     function getCurrentLag (game) {
         //return 0; // no lag
         return game.rnd.integerInRange(300, 3000);
@@ -125,6 +119,15 @@
             enemies = game.add.group();
             bullets = game.add.group();
 
+            function createShootEvent (enemy) {
+                enemy.shoot = game.time.events.loop(game.rnd.integerInRange(2000, 7000), function() {
+                    var bullet = bullets.create(enemy.x + (enemy.movingRight?1:-1), enemy.y, 'bullet');
+                    bullet.anchor.setTo(0.5, 0.5);
+                    game.physics.arcade.enable(bullet);
+                    bullet.body.velocity.x = (enemy.movingRight?1:-1)*(ENEMY_VELOCITY + enemy.body.velocity.xIncrement)*3;
+                });
+            }
+
             for (i = 0, l = map.objects["Logic"].length; i < l; i += 1) {
                 if (map.objects["Logic"][i].name === 'player') {
                     //Adding our hero
@@ -149,14 +152,7 @@
                     enemy.frame = 3;
                     enemy.animations.add('die', [4,5,6,7], 4, false);
                     enemy.movingRight = true;
-                    (function(enemy) {
-                        enemy.shoot = game.time.events.loop(game.rnd.integerInRange(2000, 7000), function() {
-                            var bullet = bullets.create(enemy.x + (enemy.movingRight?1:-1), enemy.y, 'bullet');
-                            bullet.anchor.setTo(0.5, 0.5);
-                            game.physics.arcade.enable(bullet);
-                            bullet.body.velocity.x = (enemy.movingRight?1:-1)*(ENEMY_VELOCITY + enemy.body.velocity.xIncrement)*3;
-                        });
-                    }(enemy));
+                    createShootEvent(enemy);
                 }
             }
         },
@@ -167,7 +163,8 @@
             game.physics.arcade.collide(player, enemies, function(player, enemy) {
                 player.score += lagTime;
                 game.time.events.remove(enemy.shoot);
-                enemy.kill();
+                enemy.body = null;
+                enemy.animations.play('die', null, false, true);
             });
             game.physics.arcade.collide(bullets, layerFg, killBullet);
 
