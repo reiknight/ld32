@@ -42,8 +42,8 @@
 
         player.body.bounce.y = 0.2;
         player.body.gravity.y = 300;
-        player.body.collideWorldBounds = true;
-        
+        player.body.collideWorldBounds = false;
+
         map.setCollisionBetween(1, 2, true, layer.index, true);
 
         //Initializing input
@@ -53,7 +53,7 @@
     function update() {
         //Checking collisions
         game.physics.arcade.collide(player, layer);
-        
+
         //Checking input
         player.body.velocity.x = 0;
 
@@ -63,8 +63,25 @@
         if(cursors.right.isDown) {
             player.body.velocity.x += PLAYER_VELOCITY;
         }
+
         if(cursors.up.isDown && player.body.blocked.down) {
             player.body.velocity.y = JUMP_VELOCITY;
+        }
+
+        if (player.y > game.world.height) {
+            player.y = 0;
+        }
+
+        if (player.y < 0) {
+            player.y = game.world.height;
+        }
+
+        if (player.x > game.world.width) {
+            player.x = 0;
+        }
+
+        if (player.x < 0) {
+            player.x = game.world.width;
         }
     }
 
