@@ -14,6 +14,7 @@
         laggedPosition,
         map,
         enemies,
+        bullets,
         cursors,
         music,
         pingTxt,
@@ -36,23 +37,24 @@
         laggedPosition = null;
     }
 
-    function killEnemy(player, enemy) {
-        player.score += lagTime;
-        enemy.kill();
+    function killBullet(bullet, tile) {
+        bullet.kill();
     }
-
+    
     function checkEnemyMovement(enemy, tile) {
         if(tile.faceLeft && tile.faceRight) {
             enemy.body.velocity.x = 0;
         } else if(tile.faceLeft && tile.left + tile.width/10 > enemy.left) {
             enemy.body.velocity.x = ENEMY_VELOCITY + enemy.body.velocity.xIncrement;
+            enemy.movingRight = true;
             enemy.frame = 3;
         } else if(tile.faceRight && tile.right - tile.width/10 < enemy.right) {
             enemy.body.velocity.x = -ENEMY_VELOCITY - enemy.body.velocity.xIncrement;
+            enemy.movingRight = false;
             enemy.frame = 0;
         }
     }
-
+    
     LAGMAN.playState = {
         init: function () {
 
@@ -62,6 +64,7 @@
             game.load.spritesheet('enemy', '/assets/images/enemy.png', 20, 40);
             game.load.tilemap('level11', '/assets/levels/level11.json', null, Phaser.Tilemap.TILED_JSON);
             game.load.image('tiles', '/assets/images/basic_tileset.png');
+            game.load.image('bullet', '/assets/images/bullet.png');
             game.load.audio('main_music', '/assets/music/maintheme.ogg');
             game.load.bitmapFont('carrier_command', '/assets/fonts/carrier_command.png', '/assets/fonts/carrier_command.xml');
         },
@@ -107,8 +110,9 @@
                 pingTxt.text = "Ping: " + lagTime + " ms";
             });
 
-            // Create enemies group
+            // Create enemies group and bullets group
             enemies = game.add.group();
+            bullets = game.add.group();
 
             for (i = 0, l = map.objects["Logic"].length; i < l; i += 1) {
                 if (map.objects["Logic"][i].name === 'player') {
@@ -132,6 +136,15 @@
                     enemy.body.velocity.x = ENEMY_VELOCITY + enemy.body.velocity.xIncrement;
                     enemy.body.collideWorldBounds = false;
                     enemy.frame = 3;
+                    enemy.movingRight = true;
+                    (function(enemy) {
+                        enemy.shoot = game.time.events.loop(game.rnd.integerInRange(2000, 7000), function() {
+                            var bullet = bullets.create(enemy.x + (enemy.movingRight?1:-1), enemy.y, 'bullet');
+                            bullet.anchor.setTo(0.5, 0.5);
+                            game.physics.arcade.enable(bullet);
+                            bullet.body.velocity.x = (enemy.movingRight?1:-1)*(ENEMY_VELOCITY + enemy.body.velocity.xIncrement)*3;
+                        });
+                    }(enemy));
                 }
             }
         },
@@ -139,7 +152,12 @@
             //Checking collisions
             game.physics.arcade.collide(player, layerFg);
             game.physics.arcade.collide(enemies, layerFg, checkEnemyMovement);
-            game.physics.arcade.collide(player, enemies, killEnemy);
+            game.physics.arcade.collide(player, enemies, function(player, enemy) {
+                player.score += lagTime;
+                game.time.events.remove(enemy.shoot);
+                enemy.kill();
+            });
+            game.physics.arcade.collide(bullets, layerFg, killBullet);
 
             //Checking input
             player.body.velocity.x = 0;
