@@ -13,7 +13,7 @@
         lagTime,
         lagFactor,
         laggedPosition,
-        enemy,
+        enemies,
         cursors,
         music,
         pingTxt,
@@ -73,6 +73,9 @@
             pingTxt.text = "Ping: " + lagTime + " ms";
         });
 
+        // Create enemies group
+        enemies = game.add.group();
+
         for (i = 0, l = map.objects["Logic"].length; i < l; i += 1) {
             if (map.objects["Logic"][i].name === 'player') {
                 //Adding our hero
@@ -84,9 +87,9 @@
                 player.body.collideWorldBounds = false;
                 player.score = 0;
                 player.frame = 3;
-            } else if (map.objects["Logic"][i].name === 'enemy') {
+            } else if (map.objects["Logic"][i].type === 'enemy') {
                 //Adding our enemy
-                enemy = game.add.sprite(map.objects["Logic"][i].x, map.objects["Logic"][i].y - map.tileHeight, 'enemy');
+                var enemy = enemies.create(map.objects["Logic"][i].x, map.objects["Logic"][i].y - map.tileHeight, 'enemy');
                 enemy.anchor.setTo(0.5, 0.5);
                 //Physics and hero must interact
                 game.physics.arcade.enable(enemy);
@@ -108,12 +111,12 @@
         player.y = laggedPosition.y;
         laggedPosition = null;
     }
-    
+
     function killEnemy(player, enemy) {
         player.score += lagTime;
         enemy.kill();
     }
-    
+
     function checkEnemyMovement(enemy, tile) {
         if(tile.faceLeft && tile.faceRight) {
             enemy.body.velocity.x = 0;
@@ -127,8 +130,8 @@
     function update() {
         //Checking collisions
         game.physics.arcade.collide(player, layerFg);
-        game.physics.arcade.collide(enemy, layerFg, checkEnemyMovement);
-        game.physics.arcade.collide(player, enemy, killEnemy);
+        game.physics.arcade.collide(enemies, layerFg, checkEnemyMovement);
+        game.physics.arcade.collide(player, enemies, killEnemy);
 
         //Checking input
         player.body.velocity.x = 0;
@@ -145,7 +148,7 @@
         if(cursors.up.isDown && player.body.blocked.down) {
             player.body.velocity.y = JUMP_VELOCITY;
         }
-        
+
         if(cursors.down.isDown) {
             console.log(player.body.touching);
         }
