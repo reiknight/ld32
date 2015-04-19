@@ -5,7 +5,8 @@
         JUMP_VELOCITY   = -225;
 
     var map,
-        layer,
+        layerBg,
+        layerFg,
         player,
         cursors;
 
@@ -28,10 +29,12 @@
 
         //Creates a layer from the World1 layer in the map data.
         //A Layer is effectively like a Phaser.Sprite, so is added to the display list.
-        layer = map.createLayer('Tile Layer 1');
+        layerBg = map.createLayer('Background');
+        layerFg = map.createLayer('Foreground');
 
         //This resizes the game world to match the layer dimensions
-        layer.resizeWorld();
+        layerBg.resizeWorld();
+        layerFg.resizeWorld();
 
         //Adding our hero
         player = game.add.sprite(400, 300, 'player');
@@ -44,7 +47,7 @@
         player.body.gravity.y = 300;
         player.body.collideWorldBounds = false;
 
-        map.setCollisionBetween(1, 2, true, layer.index, true);
+        map.setCollisionBetween(1, 2, true, layerFg.index, true);
 
         //Initializing input
         cursors = game.input.keyboard.createCursorKeys();
@@ -52,7 +55,7 @@
 
     function update() {
         //Checking collisions
-        game.physics.arcade.collide(player, layer);
+        game.physics.arcade.collide(player, layerFg);
 
         //Checking input
         player.body.velocity.x = 0;
