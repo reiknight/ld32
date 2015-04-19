@@ -40,7 +40,18 @@
     function killBullet(bullet, tile) {
         bullet.kill();
     }
-    
+
+    function killEnemy(player, enemy) {
+        player.score += lagTime;
+        enemy.body = null;
+        enemy.animations.play('die', null, false, true);
+    }
+
+    function getCurrentLag (game) {
+        //return 0; // no lag
+        return game.rnd.integerInRange(300, 3000);
+    }
+
     function checkEnemyMovement(enemy, tile) {
         if(tile.faceLeft && tile.faceRight) {
             enemy.body.velocity.x = 0;
@@ -54,7 +65,7 @@
             enemy.frame = 0;
         }
     }
-    
+
     LAGMAN.playState = {
         init: function () {
 
@@ -69,7 +80,7 @@
             game.load.bitmapFont('carrier_command', '/assets/fonts/carrier_command.png', '/assets/fonts/carrier_command.xml');
         },
         create: function (game) {
-            lagTime = game.rnd.integerInRange(300, 3000);
+            lagTime = getCurrentLag(game);
             lagFactor = 2;
             lagTimer = 0;
 
@@ -106,7 +117,7 @@
             timeTxt = game.add.bitmapText(680, 5, 'carrier_command','Time: 99',11);
 
             game.time.events.loop(5000, function () {
-                lagTime = game.rnd.integerInRange(300, 3000);
+                lagTime = getCurrentLag(game);
                 pingTxt.text = "Ping: " + lagTime + " ms";
             });
 
@@ -136,6 +147,7 @@
                     enemy.body.velocity.x = ENEMY_VELOCITY + enemy.body.velocity.xIncrement;
                     enemy.body.collideWorldBounds = false;
                     enemy.frame = 3;
+                    enemy.animations.add('die', [4,5,6,7], 4, false);
                     enemy.movingRight = true;
                     (function(enemy) {
                         enemy.shoot = game.time.events.loop(game.rnd.integerInRange(2000, 7000), function() {

@@ -10,5 +10,5 @@
     game.state.add('credits', LAGMAN.creditsState);
     game.state.add('play', LAGMAN.playState);
 
-    game.state.start('credits');
+    game.state.start('play');
 }(window));
