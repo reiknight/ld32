@@ -37,7 +37,7 @@
         laggedPosition = null;
     }
 
-    function killBullet(bullet, tile) {
+    function killBullet(bullet) {
         bullet.kill();
     }
 
@@ -52,11 +52,11 @@
         } else if(tile.faceLeft && tile.left + tile.width/10 > enemy.left) {
             enemy.body.velocity.x = ENEMY_VELOCITY + enemy.body.velocity.xIncrement;
             enemy.movingRight = true;
-            enemy.frame = 3;
+            enemy.frame = 2;
         } else if(tile.faceRight && tile.right - tile.width/10 < enemy.right) {
             enemy.body.velocity.x = -ENEMY_VELOCITY - enemy.body.velocity.xIncrement;
             enemy.movingRight = false;
-            enemy.frame = 0;
+            enemy.frame = 1;
         }
     }
 
@@ -69,7 +69,7 @@
             game.load.spritesheet('enemy', '/assets/images/enemy.png', 20, 40);
             game.load.tilemap('level11', '/assets/levels/level11.json', null, Phaser.Tilemap.TILED_JSON);
             game.load.image('tiles', '/assets/images/basic_tileset.png');
-            game.load.image('bullet', '/assets/images/bullet.png');
+            game.load.spritesheet('bullet', '/assets/images/bullet.png', 8, 4);
             game.load.audio('main_music', '/assets/music/maintheme.ogg');
             game.load.bitmapFont('carrier_command', '/assets/fonts/carrier_command.png', '/assets/fonts/carrier_command.xml');
         },
@@ -125,6 +125,20 @@
                     bullet.anchor.setTo(0.5, 0.5);
                     game.physics.arcade.enable(bullet);
                     bullet.body.velocity.x = (enemy.movingRight?1:-1)*(ENEMY_VELOCITY + enemy.body.velocity.xIncrement)*3;
+                    if (enemy.movingRight) {
+                        enemy.frame = 3;
+                        bullet.frame = 1;
+                    } else {
+                        enemy.frame = 0;
+                        bullet.frame = 0;
+                    }
+                    game.time.events.add(1000, function () {
+                        if (enemy.movingRight) {
+                            enemy.frame = 2;
+                        } else {
+                            enemy.frame = 1;
+                        }
+                    });
                 });
             }
 
@@ -149,7 +163,7 @@
                     enemy.body.velocity.xIncrement = game.rnd.integerInRange(0, 15);
                     enemy.body.velocity.x = ENEMY_VELOCITY + enemy.body.velocity.xIncrement;
                     enemy.body.collideWorldBounds = false;
-                    enemy.frame = 3;
+                    enemy.frame = 2;
                     enemy.animations.add('die', [4,5,6,7], 4, false);
                     enemy.movingRight = true;
                     createShootEvent(enemy);

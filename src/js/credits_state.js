@@ -43,10 +43,10 @@
             reikText = game.add.bitmapText(50, 380, 'carrier_command', '@reikval', 18);
             reikText.tint = 0x223344;
 
-            progMusic = game.add.bitmapText(50, 450, 'carrier_command', 'Programming and Art', 18);
-            progMusic.tint = 0x223344;
-            reikText = game.add.bitmapText(50, 480, 'carrier_command', '@beagleknight', 18);
-            reikText.tint = 0x223344;
+            progArt = game.add.bitmapText(50, 450, 'carrier_command', 'Programming and Art', 18);
+            progArt.tint = 0x223344;
+            beagleText = game.add.bitmapText(50, 480, 'carrier_command', '@beagleknight', 18);
+            beagleText.tint = 0x223344;
 
         },
         update: function () {
