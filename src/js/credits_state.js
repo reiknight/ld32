@@ -24,17 +24,30 @@
 
         },
         preload: function (game) {
-            game.load.image('background', '/assets/images/start_screen.png');
+            game.load.image('background', '/assets/images/credits_screen.png');
             game.load.bitmapFont('carrier_command', '/assets/fonts/carrier_command.png', '/assets/fonts/carrier_command.xml');
             game.load.spritesheet('button', '/assets/images/button.png', 270, 80);
         },
         create: function (game) {
+            var progMusic, reikText, progArt, beagleText;
+
             game.add.image(0, 0, 'background');
 
-            createButton(game, 400, 250, function () {
+            createButton(game, 30, 30, function () {
                 game.state.start('start');
             });
-            game.add.bitmapText(430, 280, 'carrier_command', 'Go to title', 18);
+            game.add.bitmapText(50, 60, 'carrier_command', 'Go to title', 18);
+
+            progMusic = game.add.bitmapText(50, 350, 'carrier_command', 'Programming and Music', 18);
+            progMusic.tint = 0x223344;
+            reikText = game.add.bitmapText(50, 380, 'carrier_command', '@reikval', 18);
+            reikText.tint = 0x223344;
+
+            progMusic = game.add.bitmapText(50, 450, 'carrier_command', 'Programming and Art', 18);
+            progMusic.tint = 0x223344;
+            reikText = game.add.bitmapText(50, 480, 'carrier_command', '@beagleknight', 18);
+            reikText.tint = 0x223344;
+
         },
         update: function () {
 

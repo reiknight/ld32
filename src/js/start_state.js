@@ -53,8 +53,6 @@
                 game.state.start('credits');
             });
             game.add.bitmapText(460, 480, 'carrier_command', 'Credits', 18);
-
-
         },
         update: function () {
 
