@@ -8,6 +8,9 @@
         layerBg,
         layerFg,
         player,
+        lagTime,
+        lagFactor,
+        laggedPosition,
         enemy,
         cursors,
         music,
@@ -27,6 +30,9 @@
     }
 
     function create() {
+        lagTime = 1000;
+        lagFactor = 2;
+
         //Adding physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -61,6 +67,18 @@
 
         game.time.events.loop(1000, function () {
             pingTxt.text = "Ping: " + game.rnd.integerInRange(300, 9999) + " ms";
+        });
+
+        game.time.events.loop(lagTime / lagFactor, function () {
+            if (!laggedPosition) {
+                laggedPosition = { x: player.x, y: player.y };
+            }
+        });
+
+        game.time.events.loop(lagTime, function () {
+            player.x = laggedPosition.x;
+            player.y = laggedPosition.y;
+            laggedPosition = null;
         });
 
         for (i = 0, l = map.objects["Logic"].length; i < l; i += 1) {
