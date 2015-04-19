@@ -53,10 +53,10 @@
 
         //Initializing input
         cursors = game.input.keyboard.createCursorKeys();
-        
+
         //Playing music
         music = game.add.audio("main_music", 1, true);
-        music.play();
+        //music.play();
     }
 
     function update() {
