@@ -45,9 +45,11 @@
         if(tile.faceLeft && tile.faceRight) {
             enemy.body.velocity.x = 0;
         } else if(tile.faceLeft && tile.left + tile.width/10 > enemy.left) {
-            enemy.body.velocity.x = ENEMY_VELOCITY;
+            enemy.body.velocity.x = ENEMY_VELOCITY + enemy.body.velocity.xIncrement;
+            enemy.frame = 3;
         } else if(tile.faceRight && tile.right - tile.width/10 < enemy.right) {
-            enemy.body.velocity.x = -ENEMY_VELOCITY;
+            enemy.body.velocity.x = -ENEMY_VELOCITY - enemy.body.velocity.xIncrement;
+            enemy.frame = 0;
         }
     }
 
@@ -126,8 +128,10 @@
                     //Physics and hero must interact
                     game.physics.arcade.enable(enemy);
                     enemy.body.gravity.y = 300;
-                    enemy.body.velocity.x = ENEMY_VELOCITY;
+                    enemy.body.velocity.xIncrement = game.rnd.integerInRange(0, 15);
+                    enemy.body.velocity.x = ENEMY_VELOCITY + enemy.body.velocity.xIncrement;
                     enemy.body.collideWorldBounds = false;
+                    enemy.frame = 3;
                 }
             }
         },
