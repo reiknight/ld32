@@ -79,9 +79,9 @@
                 player.anchor.setTo(0.5, 0.5);
                 //Physics and hero must interact
                 game.physics.arcade.enable(player);
-                player.body.bounce.y = 0.2;
                 player.body.gravity.y = 300;
                 player.body.collideWorldBounds = false;
+                player.score = 0;
                 player.frame = 3;
             } else if (map.objects["Logic"][i].name === 'enemy') {
                 //Adding our enemy
@@ -89,7 +89,6 @@
                 enemy.anchor.setTo(0.5, 0.5);
                 //Physics and hero must interact
                 game.physics.arcade.enable(enemy);
-                enemy.body.bounce.y = 0.2;
                 enemy.body.gravity.y = 300;
                 enemy.body.collideWorldBounds = false;
             }
@@ -107,11 +106,17 @@
         player.y = laggedPosition.y;
         laggedPosition = null;
     }
+    
+    function killEnemy(player, enemy) {
+        player.score += lagTime;
+        enemy.kill();
+    }
 
     function update() {
         //Checking collisions
         game.physics.arcade.collide(player, layerFg);
         game.physics.arcade.collide(enemy, layerFg);
+        game.physics.arcade.collide(player, enemy, killEnemy);
 
         //Checking input
         player.body.velocity.x = 0;
