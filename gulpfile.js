@@ -4,7 +4,7 @@ var gulp           = require('gulp'),
     jshint         = require('gulp-jshint'),
     concat         = require('gulp-concat'),
     LIB_FILES      = ['bower_components/phaser/build/phaser.min.js'],
-    SCRIPT_FILES   = ['src/js/start_state.js', 'src/js/main.js'],
+    SCRIPT_FILES   = ['src/js/*_state.js', 'src/js/main.js'],
     TEMPLATE_FILES = ['src/templates/**/*.jade'],
     ASSET_FILES    = ['src/assets/**/*'];
 

@@ -29,7 +29,7 @@
             game.load.spritesheet('button', '/assets/images/button.png', 270, 80);
         },
         create: function (game) {
-            var titleL, titleGman, startButton;
+            var titleL, titleGman;
 
             game.add.image(0, 0, 'background');
 
