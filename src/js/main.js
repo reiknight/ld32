@@ -2,6 +2,7 @@
     "use strict";
 
     var PLAYER_VELOCITY = 150,
+        ENEMY_VELOCITY  = 30,
         JUMP_VELOCITY   = -225;
 
     var map,
@@ -90,6 +91,7 @@
                 //Physics and hero must interact
                 game.physics.arcade.enable(enemy);
                 enemy.body.gravity.y = 300;
+                enemy.body.velocity.x = ENEMY_VELOCITY;
                 enemy.body.collideWorldBounds = false;
             }
         }
@@ -111,11 +113,21 @@
         player.score += lagTime;
         enemy.kill();
     }
+    
+    function checkEnemyMovement(enemy, tile) {
+        if(tile.faceLeft && tile.faceRight) {
+            enemy.body.velocity.x = 0;
+        } else if(tile.faceLeft) {
+            enemy.body.velocity.x = ENEMY_VELOCITY;
+        } else if(tile.faceRight) {
+            enemy.body.velocity.x = -ENEMY_VELOCITY;
+        }
+    }
 
     function update() {
         //Checking collisions
         game.physics.arcade.collide(player, layerFg);
-        game.physics.arcade.collide(enemy, layerFg);
+        game.physics.arcade.collide(enemy, layerFg, checkEnemyMovement);
         game.physics.arcade.collide(player, enemy, killEnemy);
 
         //Checking input
@@ -132,6 +144,10 @@
 
         if(cursors.up.isDown && player.body.blocked.down) {
             player.body.velocity.y = JUMP_VELOCITY;
+        }
+        
+        if(cursors.down.isDown) {
+            console.log(player.body.touching);
         }
 
         if (player.y > game.world.height) {
@@ -157,7 +173,7 @@
         }
 
         if (lagTimer > lagTime) {
-            setLagPosition();
+            //setLagPosition();
             lagTimer = 0;
         }
     }
