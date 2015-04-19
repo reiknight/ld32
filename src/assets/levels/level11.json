@@ -42,6 +42,22 @@
                  "width":0,
                  "x":40,
                  "y":560
+                }, 
+                {
+                 "gid":8,
+                 "height":0,
+                 "id":12,
+                 "name":"enemy",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":420,
+                 "y":260
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -50,7 +66,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":10,
+ "nextobjectid":13,
  "orientation":"orthogonal",
  "properties":
     {
@@ -81,6 +97,21 @@
          "imagewidth":80,
          "margin":0,
          "name":"hero",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tileheight":40,
+         "tilewidth":20
+        }, 
+        {
+         "firstgid":7,
+         "image":"..\/images\/enemy.png",
+         "imageheight":40,
+         "imagewidth":80,
+         "margin":0,
+         "name":"enemy",
          "properties":
             {
 

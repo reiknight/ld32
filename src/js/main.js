@@ -8,6 +8,7 @@
         layerBg,
         layerFg,
         player,
+        enemy,
         cursors,
         music,
         pingTxt,
@@ -18,6 +19,7 @@
 
     function preload() {
         game.load.spritesheet('player', '/assets/images/hero.png', 20, 40);
+        game.load.spritesheet('enemy', '/assets/images/enemy.png', 20, 40);
         game.load.tilemap('level11', '/assets/levels/level11.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', '/assets/images/basic_tileset.png');
         game.load.audio('main_music', '/assets/music/maintheme.ogg');
@@ -30,7 +32,7 @@
 
         //The 'test_map' key here is the Loader key given in game.load.tilemap
         map = game.add.tilemap('level11');
-console.log(map);
+
         //The first parameter is the tileset name, as specified in the Tiled map editor (and in the tilemap json file)
         //The second parameter maps this name to the Phaser.Cache key 'tiles'
         map.addTilesetImage('basic_tileset', 'tiles');
@@ -72,6 +74,15 @@ console.log(map);
                 player.body.gravity.y = 300;
                 player.body.collideWorldBounds = false;
                 player.frame = 3;
+            } else if (map.objects["Logic"][i].name === 'enemy') {
+                //Adding our enemy
+                enemy = game.add.sprite(map.objects["Logic"][i].x, map.objects["Logic"][i].y - map.tileHeight, 'enemy');
+                enemy.anchor.setTo(0.5, 0.5);
+                //Physics and hero must interact
+                game.physics.arcade.enable(enemy);
+                enemy.body.bounce.y = 0.2;
+                enemy.body.gravity.y = 300;
+                enemy.body.collideWorldBounds = false;
             }
         }
     }
@@ -79,6 +90,7 @@ console.log(map);
     function update() {
         //Checking collisions
         game.physics.arcade.collide(player, layerFg);
+        game.physics.arcade.collide(enemy, layerFg);
 
         //Checking input
         player.body.velocity.x = 0;
