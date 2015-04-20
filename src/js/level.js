@@ -241,7 +241,7 @@
 
     LAGMAN.Level.prototype.getCurrentLag = function (game) {
         this.lagTime = game.rnd.integerInRange(300, 3000);
-        this.lagTime = 0;
+        //this.lagTime = 0;
         return this.lagTime;
     };
 
