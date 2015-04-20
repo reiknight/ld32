@@ -40,7 +40,7 @@
             titleGman.tint = 0x223344;
 
             createButton(game, 400, 250, function () {
-                game.state.start('play');
+                game.state.start('play', true, false, LAGMAN.Level.LEVELS[0]);
             });
             game.add.bitmapText(430, 280, 'carrier_command', 'Start game', 18);
 

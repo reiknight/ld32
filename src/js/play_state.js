@@ -6,13 +6,14 @@
     var level;
 
     LAGMAN.playState = {
-        init: function () {
-
+        init: function (levelId) {
+            this.levelId = levelId;
         },
         preload: function (game) {
             game.load.spritesheet('player', '/assets/images/hero.png', 20, 40);
             game.load.spritesheet('enemy', '/assets/images/enemy.png', 20, 40);
             game.load.tilemap('level11', '/assets/levels/level11.json', null, Phaser.Tilemap.TILED_JSON);
+            game.load.tilemap('level12', '/assets/levels/level12.json', null, Phaser.Tilemap.TILED_JSON);
             game.load.image('tiles', '/assets/images/basic_tileset.png');
             game.load.spritesheet('bullet', '/assets/images/bullet.png', 8, 4);
             game.load.audio('main_music', '/assets/music/maintheme.ogg');
@@ -28,7 +29,7 @@
             game.physics.startSystem(Phaser.Physics.ARCADE);
 
             //Load first level
-            level = new LAGMAN.Level(game, 'level11');
+            level = new LAGMAN.Level(game, this.levelId);
 
             pingTxt = game.add.bitmapText(5, 5, 'carrier_command', 'Ping: ' + level.lagTime + ' ms',11);
             levelTxt = game.add.bitmapText(530, 5, 'carrier_command','Level: 1-1',11);

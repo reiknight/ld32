@@ -7,8 +7,8 @@
         BOT_VELOCITY    = 100,
         ENEMY_VELOCITY  = 30,
         JUMP_VELOCITY   = -225;
-
-    var laggedPosition;
+    var levelIdx = 0,
+        laggedPosition;
 
     function createShootEvent (game, enemy, bullets) {
         enemy.shoot = game.time.events.loop(game.rnd.integerInRange(2000, 7000), function() {
@@ -241,11 +241,16 @@
 
         //Checking victory-lose conditions
         if (this.enemies.countLiving() === 0) {
-            game.state.start('credits');
+            LAGMAN.Level.currentLevelIdx += 1;
+            if (LAGMAN.Level.currentLevelIdx >= LAGMAN.Level.LEVELS.length) {
+                game.state.start('credits');
+            } else {
+                game.state.start('play', true, false, LAGMAN.Level.LEVELS[LAGMAN.Level.currentLevelIdx]);
+            }
         }
 
         if (!this.player.alive) {
-            game.state.start('play');
+            game.state.start('play', true, false, LAGMAN.Level.LEVELS[LAGMAN.Level.currentLevelIdx]);
         }
     };
 
@@ -254,6 +259,9 @@
         this.lagTime = 0;
         return this.lagTime;
     };
+
+    LAGMAN.Level.LEVELS = ['level11', 'level12'];
+    LAGMAN.Level.currentLevelIdx = 0;
 
     exports.LAGMAN = LAGMAN;
 }(window));
