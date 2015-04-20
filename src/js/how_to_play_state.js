@@ -39,6 +39,7 @@
             game.load.audio('main_music', '/assets/music/maintheme.ogg');
             game.load.bitmapFont('carrier_command', '/assets/fonts/carrier_command.png', '/assets/fonts/carrier_command.xml');
             game.load.audio('enemydie', '/assets/sound/enemydie.wav');
+            game.load.audio('playerdie', '/assets/sound/playerdie.wav');
             game.load.audio('jump', '/assets/sound/jump.wav');
         },
         create: function (game) {
@@ -64,7 +65,7 @@
 
             level = new LAGMAN.Level(game, 'howto');
 
-            game.time.events.add(9000, function () {
+            game.time.events.add(10000, function () {
                 game.state.start('how_to_play', true, false);
             })
         },

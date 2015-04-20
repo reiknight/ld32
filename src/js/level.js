@@ -98,8 +98,10 @@
         this.lagTimer = 0;
 
         //Playing music and adding sound effects
-        this.music = game.add.audio(LAGMAN.Level.MUSIC[game.rnd.integerInRange(0, LAGMAN.Level.MUSIC.length - 1)], 1, true);
-        this.music.play();
+        if (levelId !== 'howto') {
+            this.music = game.add.audio(LAGMAN.Level.MUSIC[game.rnd.integerInRange(0, LAGMAN.Level.MUSIC.length - 1)], 1, true);
+            this.music.play();
+        }
         this.enemyDieFX = game.add.audio('enemydie', 0.2, false);
         this.jumpFX = game.add.audio('jump', 0.2, false);
         this.playerDieFX = game.add.audio('playerdie', 0.4, false);
@@ -141,6 +143,7 @@
                 bot.body.velocity.x = BOT_VELOCITY;
                 bot.score = 0;
                 bot.frame = 3;
+                bot.animations.add('die', [4,5,6,7,8,9,10,11], 4, false);
                 if (this.map.objects["Logic"][i].name === 'bot1') {
                     game.time.events.add(4000, function () {
                         bot.body.velocity.y = JUMP_VELOCITY;
@@ -167,9 +170,12 @@
         game.physics.arcade.collide(this.bullets, this.layerFg, killBullet);
         game.physics.arcade.collide(this.bots, this.bullets, function(player, bullet) {
             player.score = 0;
-            player.kill();
+            player.dying = true;
+            player.body.velocity = { x: 0, y: 0 };
+            player.animations.play('die', null, false, true);
+            this.playerDieFX.play();
             bullet.kill();
-        });
+        }, null, this);
 
         game.physics.arcade.collide(this.player, this.layerFg);
 
@@ -239,20 +245,22 @@
             }
         }
 
-        //Checking victory-lose conditions
-        if (this.enemies.countLiving() === 0) {
-            LAGMAN.Level.currentLevelIdx += 1;
-            this.music.stop();
-            if (LAGMAN.Level.currentLevelIdx >= LAGMAN.Level.LEVELS.length) {
-                game.state.start('credits');
-            } else {
+        if (this.player) {
+            //Checking victory-lose conditions
+            if (this.enemies.countLiving() === 0) {
+                LAGMAN.Level.currentLevelIdx += 1;
+                this.music.stop();
+                if (LAGMAN.Level.currentLevelIdx >= LAGMAN.Level.LEVELS.length) {
+                    game.state.start('credits');
+                } else {
+                    game.state.start('play', true, false, LAGMAN.Level.LEVELS[LAGMAN.Level.currentLevelIdx].id);
+                }
+            }
+
+            if (!this.player.alive) {
+                this.music.stop();
                 game.state.start('play', true, false, LAGMAN.Level.LEVELS[LAGMAN.Level.currentLevelIdx].id);
             }
-        }
-
-        if (!this.player.alive) {
-            this.music.stop();
-            game.state.start('play', true, false, LAGMAN.Level.LEVELS[LAGMAN.Level.currentLevelIdx].id);
         }
     };
 
