@@ -271,9 +271,10 @@
     };
 
     LAGMAN.Level.LEVELS = [
-        { id: 'level13', name: "Level 1-3" },
         { id: 'level11', name: "Level 1-1" },
-        { id: 'level12', name: "Level 1-2" }
+        { id: 'level12', name: "Level 1-2" },
+        { id: 'level13', name: "Level 1-3" },
+        { id: 'level14', name: "Level 1-4" }
     ];
 
     LAGMAN.Level.MUSIC = ['main_music', 'sec_music'];
