@@ -102,6 +102,7 @@
         //this.music.play();
         this.enemyDieFX = game.add.audio('enemydie', 0.2, false);
         this.jumpFX = game.add.audio('jump', 0.2, false);
+        this.playerDieFX = game.add.audio('playerdie', 0.4, false);
 
         for (i = 0, l =this. map.objects["Logic"].length; i < l; i += 1) {
             if (this.map.objects["Logic"][i].name === 'player') {
@@ -188,7 +189,8 @@
             player.dying = true;
             player.body.velocity = { x: 0, y: 0 };
             player.animations.play('die', null, false, true);
-        });
+            this.playerDieFX.play();
+        }, null, this);
 
         if (this.player && !this.player.dying) {
             //Checking input

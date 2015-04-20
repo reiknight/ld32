@@ -19,6 +19,7 @@
             game.load.bitmapFont('carrier_command', '/assets/fonts/carrier_command.png', '/assets/fonts/carrier_command.xml');
             game.load.audio('enemydie', '/assets/sound/enemydie.wav');
             game.load.audio('jump', '/assets/sound/jump.wav');
+            game.load.audio('playerdie', '/assets/sound/playerdie.wav');
         },
         create: function (game) {
             var pingTxt, levelTxt, timeTxt;
