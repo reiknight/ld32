@@ -245,12 +245,12 @@
             if (LAGMAN.Level.currentLevelIdx >= LAGMAN.Level.LEVELS.length) {
                 game.state.start('credits');
             } else {
-                game.state.start('play', true, false, LAGMAN.Level.LEVELS[LAGMAN.Level.currentLevelIdx]);
+                game.state.start('play', true, false, LAGMAN.Level.LEVELS[LAGMAN.Level.currentLevelIdx].id);
             }
         }
 
         if (!this.player.alive) {
-            game.state.start('play', true, false, LAGMAN.Level.LEVELS[LAGMAN.Level.currentLevelIdx]);
+            game.state.start('play', true, false, LAGMAN.Level.LEVELS[LAGMAN.Level.currentLevelIdx].id);
         }
     };
 
@@ -260,7 +260,11 @@
         return this.lagTime;
     };
 
-    LAGMAN.Level.LEVELS = ['level11', 'level12'];
+    LAGMAN.Level.LEVELS = [
+        { id: 'level11', name: "Level 1-1" },
+        { id: 'level12', name: "Level 1-2" }
+    ];
+
     LAGMAN.Level.currentLevelIdx = 0;
 
     exports.LAGMAN = LAGMAN;

@@ -32,7 +32,7 @@
             level = new LAGMAN.Level(game, this.levelId);
 
             pingTxt = game.add.bitmapText(5, 5, 'carrier_command', 'Ping: ' + level.lagTime + ' ms',11);
-            levelTxt = game.add.bitmapText(530, 5, 'carrier_command','Level: 1-1',11);
+            levelTxt = game.add.bitmapText(530, 5, 'carrier_command', LAGMAN.Level.LEVELS[LAGMAN.Level.currentLevelIdx].name,11);
             timeTxt = game.add.bitmapText(680, 5, 'carrier_command','Time: 99',11);
 
             game.time.events.loop(5000, function () {
