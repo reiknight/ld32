@@ -47,6 +47,8 @@
             progArt.tint = 0x223344;
             beagleText = game.add.bitmapText(50, 480, 'carrier_command', '@beagleknight', 18);
             beagleText.tint = 0x223344;
+            beagleText = game.add.bitmapText(50, 510, 'carrier_command', 'as the original Lagman', 10);
+            beagleText.tint = 0x223344;
 
         },
         update: function () {
