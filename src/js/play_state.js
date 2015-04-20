@@ -14,6 +14,7 @@
             game.load.spritesheet('enemy', '/assets/images/enemy.png', 20, 40);
             game.load.tilemap('level11', '/assets/levels/level11.json', null, Phaser.Tilemap.TILED_JSON);
             game.load.tilemap('level12', '/assets/levels/level12.json', null, Phaser.Tilemap.TILED_JSON);
+            game.load.tilemap('level13', '/assets/levels/level13.json', null, Phaser.Tilemap.TILED_JSON);
             game.load.image('tiles', '/assets/images/basic_tileset.png');
             game.load.spritesheet('bullet', '/assets/images/bullet.png', 8, 4);
             game.load.audio('main_music', '/assets/music/maintheme.ogg');

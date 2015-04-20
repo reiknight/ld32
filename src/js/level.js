@@ -271,6 +271,7 @@
     };
 
     LAGMAN.Level.LEVELS = [
+        { id: 'level13', name: "Level 1-3" },
         { id: 'level11', name: "Level 1-1" },
         { id: 'level12', name: "Level 1-2" }
     ];
