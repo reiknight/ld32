@@ -21,26 +21,27 @@
             game.load.audio('jump', '/assets/sound/jump.wav');
         },
         create: function (game) {
+            var pingTxt, levelTxt, timeTxt;
+
             //Adding physics
             game.physics.startSystem(Phaser.Physics.ARCADE);
 
             //Load first level
             level = new LAGMAN.Level(game, 'level11');
-            //
-            // pingTxt = game.add.bitmapText(5, 5, 'carrier_command', 'Ping: ' + lagTime + ' ms',11);
-            // levelTxt = game.add.bitmapText(530, 5, 'carrier_command','Level: 1-1',11);
-            // timeTxt = game.add.bitmapText(680, 5, 'carrier_command','Time: 99',11);
-            //
-            // game.time.events.loop(5000, function () {
-            //     lagTime = getCurrentLag(game);
-            //     pingTxt.text = "Ping: " + lagTime + " ms";
-            // });
+
+            pingTxt = game.add.bitmapText(5, 5, 'carrier_command', 'Ping: ' + level.lagTime + ' ms',11);
+            levelTxt = game.add.bitmapText(530, 5, 'carrier_command','Level: 1-1',11);
+            timeTxt = game.add.bitmapText(680, 5, 'carrier_command','Time: 99',11);
+
+            game.time.events.loop(5000, function () {
+                var lagTime = level.getCurrentLag(game);
+                pingTxt.text = "Ping: " + lagTime + " ms";
+            });
         },
         update: function (game) {
             // Update current level
             level.update(game);
         }
-
     };
 
     exports.LAGMAN = LAGMAN;

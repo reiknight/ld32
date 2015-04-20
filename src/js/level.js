@@ -63,11 +63,6 @@
         laggedPosition = null;
     }
 
-    function getCurrentLag (game) {
-        return 0; // no lag
-        //return game.rnd.integerInRange(300, 3000);
-    }
-
     LAGMAN.Level = function (game, levelId) {
         var i,
             l;
@@ -98,7 +93,7 @@
 
         this.map.setCollisionBetween(1, 2, true, this.layerFg.index, true);
 
-        this.lagTime = getCurrentLag(game);
+        this.getCurrentLag(game);
         this.lagFactor = 2;
         this.lagTimer = 0;
 
@@ -242,6 +237,12 @@
                 game.state.start('play');
             }
         }
+    };
+
+    LAGMAN.Level.prototype.getCurrentLag = function (game) {
+        this.lagTime = game.rnd.integerInRange(300, 3000);
+        this.lagTime = 0;
+        return this.lagTime;
     };
 
     exports.LAGMAN = LAGMAN;
