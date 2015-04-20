@@ -7,8 +7,8 @@
         BOT_VELOCITY    = 100,
         ENEMY_VELOCITY  = 30,
         JUMP_VELOCITY   = -225;
-    var levelIdx = 0,
-        laggedPosition;
+
+    var laggedPosition;
 
     function createShootEvent (game, enemy, bullets) {
         enemy.shoot = game.time.events.loop(game.rnd.integerInRange(2000, 7000), function() {
@@ -144,13 +144,14 @@
                 bot.score = 0;
                 bot.frame = 3;
                 bot.animations.add('die', [4,5,6,7,8,9,10,11], 4, false);
-                if (this.map.objects["Logic"][i].name === 'bot1') {
-                    game.time.events.add(4000, function () {
-                        bot.body.velocity.y = JUMP_VELOCITY;
-                        this.jumpFX.play();
-                    }, this)
-                }
             }
+        }
+
+        if (this.bots._hash.length > 0) {
+            game.time.events.add(4000, function () {
+                this.bots._hash[1].body.velocity.y = JUMP_VELOCITY;
+                this.jumpFX.play();
+            }, this);
         }
     };
 

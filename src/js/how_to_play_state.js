@@ -3,8 +3,6 @@
 
     var LAGMAN = exports.LAGMAN || {};
 
-    var ENEMY_VELOCITY  = 30;
-
     function createButton (game, x, y, downCallback) {
         var button;
 
@@ -67,7 +65,7 @@
 
             game.time.events.add(10000, function () {
                 game.state.start('how_to_play', true, false);
-            })
+            });
         },
         update: function (game) {
             level.update(game);
