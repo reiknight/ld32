@@ -182,7 +182,8 @@
             });
             game.physics.arcade.collide(bullets, layerFg, killBullet);
             game.physics.arcade.collide(player, bullets, function() {
-                
+                player.score = 0;
+                player.kill();
             });
 
             //Checking input
@@ -229,9 +230,12 @@
                 lagTimer = 0;
             }
             
-            //Checking victory conditions
+            //Checking victory-lose conditions
             if(enemies.countLiving() === 0) {
                 game.state.start('credits');
+            }
+            if(!player.alive) {
+                game.state.start('play');
             }
         }
         
