@@ -17,6 +17,8 @@
         bullets,
         cursors,
         music,
+        enemyDieFX,
+        jumpFX,
         pingTxt,
         levelTxt,
         timeTxt,
@@ -72,6 +74,8 @@
             game.load.spritesheet('bullet', '/assets/images/bullet.png', 8, 4);
             game.load.audio('main_music', '/assets/music/maintheme.ogg');
             game.load.bitmapFont('carrier_command', '/assets/fonts/carrier_command.png', '/assets/fonts/carrier_command.xml');
+            game.load.audio('enemydie', '/assets/sound/enemydie.wav');
+            game.load.audio('jump', '/assets/sound/jump.wav');
         },
         create: function (game) {
             lagTime = getCurrentLag(game);
@@ -102,9 +106,11 @@
             //Initializing input
             cursors = game.input.keyboard.createCursorKeys();
 
-            //Playing music
+            //Playing music and adding sound effects
             music = game.add.audio("main_music", 1, true);
             //music.play();
+            enemyDieFX = game.add.audio('enemydie', 0.2, false);
+            jumpFX = game.add.audio('jump', 0.2, false);
 
             pingTxt = game.add.bitmapText(5, 5, 'carrier_command', 'Ping: ' + lagTime + ' ms',11);
             levelTxt = game.add.bitmapText(530, 5, 'carrier_command','Level: 1-1',11);
@@ -179,6 +185,7 @@
                 game.time.events.remove(enemy.shoot);
                 enemy.body = null;
                 enemy.animations.play('die', null, false, true);
+                enemyDieFX.play();
             });
             game.physics.arcade.collide(bullets, layerFg, killBullet);
             game.physics.arcade.collide(player, bullets, function() {
@@ -201,6 +208,7 @@
 
             if(cursors.up.isDown && player.body.blocked.down) {
                 player.body.velocity.y = JUMP_VELOCITY;
+                jumpFX.play();
             }
 
             if (player.y > game.world.height) {
