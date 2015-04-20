@@ -4,6 +4,7 @@
     var LAGMAN = exports.LAGMAN || {};
 
     var PLAYER_VELOCITY = 150,
+        BOT_VELOCITY    = 100,
         ENEMY_VELOCITY  = 30,
         JUMP_VELOCITY   = -225;
 
@@ -93,6 +94,7 @@
         // Create groups
         this.enemies = game.add.group();
         this.bullets = game.add.group();
+        this.bots    = game.add.group();
 
         this.map.setCollisionBetween(1, 2, true, this.layerFg.index, true);
 
@@ -131,6 +133,23 @@
                 enemy.animations.add('die', [4,5,6,7], 4, false);
                 enemy.movingRight = true;
                 createShootEvent(game, enemy, this.bullets);
+            } else if (this.map.objects["Logic"][i].type === 'bot') {
+                //Adding our hero
+                var bot = this.bots.create(this.map.objects["Logic"][i].x, this.map.objects["Logic"][i].y - this.map.tileHeight, 'player');
+                bot.anchor.setTo(0.5, 0.5);
+                //Physics and hero must interact
+                game.physics.arcade.enable(bot);
+                bot.body.gravity.y = 300;
+                bot.body.collideWorldBounds = false;
+                bot.body.velocity.x = BOT_VELOCITY;
+                bot.score = 0;
+                bot.frame = 3;
+                if (this.map.objects["Logic"][i].name === 'bot1') {
+                    game.time.events.add(4000, function () {
+                        bot.body.velocity.y = JUMP_VELOCITY;
+                        this.jumpFX.play();
+                    }, this)
+                }
             }
         }
     };
@@ -138,8 +157,16 @@
     LAGMAN.Level.prototype.update = function (game) {
         //Checking collisions
         game.physics.arcade.collide(this.player, this.layerFg);
+        game.physics.arcade.collide(this.bots, this.layerFg);
         game.physics.arcade.collide(this.enemies, this.layerFg, checkEnemyMovement);
-        game.physics.arcade.collide(this.player, this.enemies, function(player, enemy) {
+        game.physics.arcade.collide(this.player, this.enemies, function (player, enemy) {
+            player.score += this.lagTime;
+            game.time.events.remove(enemy.shoot);
+            enemy.body = null;
+            enemy.animations.play('die', null, false, true);
+            this.enemyDieFX.play();
+        }, null, this);
+        game.physics.arcade.collide(this.bots, this.enemies, function (player, enemy) {
             player.score += this.lagTime;
             game.time.events.remove(enemy.shoot);
             enemy.body = null;
@@ -147,65 +174,73 @@
             this.enemyDieFX.play();
         }, null, this);
         game.physics.arcade.collide(this.bullets, this.layerFg, killBullet);
-        game.physics.arcade.collide(this.player, this.bullets, function(player) {
+        game.physics.arcade.collide(this.player, this.bullets, function(player, bullet) {
             player.score = 0;
             player.kill();
+            bullet.kill();
+        });
+        game.physics.arcade.collide(this.bots, this.bullets, function(player, bullet) {
+            player.score = 0;
+            player.kill();
+            bullet.kill();
         });
 
-        //Checking input
-        this.player.body.velocity.x = 0;
+        if (this.player) {
+            //Checking input
+            this.player.body.velocity.x = 0;
 
-        if(this.cursors.left.isDown) {
-            this.player.body.velocity.x -= PLAYER_VELOCITY;
-            this.player.frame = 0;
-        }
+            if(this.cursors.left.isDown) {
+                this.player.body.velocity.x -= PLAYER_VELOCITY;
+                this.player.frame = 0;
+            }
 
-        if(this.cursors.right.isDown) {
-            this.player.body.velocity.x += PLAYER_VELOCITY;
-            this.player.frame = 3;
-        }
+            if(this.cursors.right.isDown) {
+                this.player.body.velocity.x += PLAYER_VELOCITY;
+                this.player.frame = 3;
+            }
 
-        if(this.cursors.up.isDown && this.player.body.blocked.down) {
-            this.player.body.velocity.y = JUMP_VELOCITY;
-            this.jumpFX.play();
-        }
+            if(this.cursors.up.isDown && this.player.body.blocked.down) {
+                this.player.body.velocity.y = JUMP_VELOCITY;
+                this.jumpFX.play();
+            }
 
-        if (this.player.y > game.world.height) {
-            this.player.y = 0;
-        }
+            if (this.player.y > game.world.height) {
+                this.player.y = 0;
+            }
 
-        if (this.player.y < 0) {
-            this.player.y = game.world.height;
-        }
+            if (this.player.y < 0) {
+                this.player.y = game.world.height;
+            }
 
-        if (this.player.x > game.world.width) {
-            this.player.x = 0;
-        }
+            if (this.player.x > game.world.width) {
+                this.player.x = 0;
+            }
 
-        if (this.player.x < 0) {
-            this.player.x = game.world.width;
-        }
+            if (this.player.x < 0) {
+                this.player.x = game.world.width;
+            }
 
-        this.lagTimer += game.time.elapsed;
+            this.lagTimer += game.time.elapsed;
 
-        if (this.lagTimer > this.lagTime / this.lagFactor) {
-            computeLagPosition(this.player);
-        }
+            if (this.lagTimer > this.lagTime / this.lagFactor) {
+                computeLagPosition(this.player);
+            }
 
-        if (this.lagTimer > this.lagTime) {
-            setLagPosition(this.player);
-            this.lagTimer = 0;
-        }
+            if (this.lagTimer > this.lagTime) {
+                setLagPosition(this.player);
+                this.lagTimer = 0;
+            }
 
-        //Checking victory-lose conditions
+            //Checking victory-lose conditions
 
-        //Checking victory conditions
-        if (this.enemies.countLiving() === 0) {
-            game.state.start('credits');
-        }
+            //Checking victory conditions
+            if (this.enemies.countLiving() === 0) {
+                game.state.start('credits');
+            }
 
-        if (!this.player.alive) {
-            game.state.start('play');
+            if (!this.player.alive) {
+                game.state.start('play');
+            }
         }
     };
 
