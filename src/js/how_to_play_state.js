@@ -63,6 +63,10 @@
             instr.tint = 0x223344;
 
             level = new LAGMAN.Level(game, 'howto');
+
+            game.time.events.add(9000, function () {
+                game.state.start('how_to_play', true, false);
+            })
         },
         update: function (game) {
             level.update(game);
