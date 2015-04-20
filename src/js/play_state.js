@@ -230,9 +230,7 @@
             }
             
             //Checking victory conditions
-            console.log(enemies.countLiving());
             if(enemies.countLiving() === 0) {
-                console.log("Aaaah");
                 game.state.start('credits');
             }
         }
