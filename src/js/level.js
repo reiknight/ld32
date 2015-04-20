@@ -98,8 +98,8 @@
         this.lagTimer = 0;
 
         //Playing music and adding sound effects
-        this.music = game.add.audio("main_music", 1, true);
-        //this.music.play();
+        this.music = game.add.audio(LAGMAN.Level.MUSIC[game.rnd.integerInRange(0, LAGMAN.Level.MUSIC.length - 1)], 1, true);
+        this.music.play();
         this.enemyDieFX = game.add.audio('enemydie', 0.2, false);
         this.jumpFX = game.add.audio('jump', 0.2, false);
         this.playerDieFX = game.add.audio('playerdie', 0.4, false);
@@ -242,6 +242,7 @@
         //Checking victory-lose conditions
         if (this.enemies.countLiving() === 0) {
             LAGMAN.Level.currentLevelIdx += 1;
+            this.music.stop();
             if (LAGMAN.Level.currentLevelIdx >= LAGMAN.Level.LEVELS.length) {
                 game.state.start('credits');
             } else {
@@ -250,13 +251,14 @@
         }
 
         if (!this.player.alive) {
+            this.music.stop();
             game.state.start('play', true, false, LAGMAN.Level.LEVELS[LAGMAN.Level.currentLevelIdx].id);
         }
     };
 
     LAGMAN.Level.prototype.getCurrentLag = function (game) {
         this.lagTime = game.rnd.integerInRange(300, 3000);
-        this.lagTime = 0;
+        //this.lagTime = 0;
         return this.lagTime;
     };
 
@@ -264,6 +266,8 @@
         { id: 'level11', name: "Level 1-1" },
         { id: 'level12', name: "Level 1-2" }
     ];
+
+    LAGMAN.Level.MUSIC = ['main_music', 'sec_music'];
 
     LAGMAN.Level.currentLevelIdx = 0;
 

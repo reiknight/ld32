@@ -17,6 +17,7 @@
             game.load.image('tiles', '/assets/images/basic_tileset.png');
             game.load.spritesheet('bullet', '/assets/images/bullet.png', 8, 4);
             game.load.audio('main_music', '/assets/music/maintheme.ogg');
+            game.load.audio('sec_music', '/assets/music/lagman2.ogg');
             game.load.bitmapFont('carrier_command', '/assets/fonts/carrier_command.png', '/assets/fonts/carrier_command.xml');
             game.load.audio('enemydie', '/assets/sound/enemydie.wav');
             game.load.audio('jump', '/assets/sound/jump.wav');
