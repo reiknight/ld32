@@ -181,6 +181,9 @@
                 enemy.animations.play('die', null, false, true);
             });
             game.physics.arcade.collide(bullets, layerFg, killBullet);
+            game.physics.arcade.collide(player, bullets, function() {
+                
+            });
 
             //Checking input
             player.body.velocity.x = 0;
@@ -222,10 +225,18 @@
             }
 
             if (lagTimer > lagTime) {
-                setLagPosition();
+                //setLagPosition();
                 lagTimer = 0;
             }
+            
+            //Checking victory conditions
+            console.log(enemies.countLiving());
+            if(enemies.countLiving() === 0) {
+                console.log("Aaaah");
+                game.state.start('credits');
+            }
         }
+        
     };
 
     exports.LAGMAN = LAGMAN;
