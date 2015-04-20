@@ -114,6 +114,7 @@
                 this.player.body.collideWorldBounds = false;
                 this.player.score = 0;
                 this.player.frame = 3;
+                this.player.animations.add('die', [4,5,6,7,8,9,10,11], 4, false);
             } else if (this.map.objects["Logic"][i].type === 'enemy') {
                 //Adding our enemy
                 var enemy = this.enemies.create(this.map.objects["Logic"][i].x, this.map.objects["Logic"][i].y - this.map.tileHeight, 'enemy');
@@ -151,36 +152,45 @@
 
     LAGMAN.Level.prototype.update = function (game) {
         //Checking collisions
-        game.physics.arcade.collide(this.player, this.layerFg);
         game.physics.arcade.collide(this.bots, this.layerFg);
         game.physics.arcade.collide(this.enemies, this.layerFg, checkEnemyMovement);
-        game.physics.arcade.collide(this.player, this.enemies, function (player, enemy) {
-            player.score += this.lagTime;
-            game.time.events.remove(enemy.shoot);
-            enemy.body = null;
-            enemy.animations.play('die', null, false, true);
-            this.enemyDieFX.play();
-        }, null, this);
         game.physics.arcade.collide(this.bots, this.enemies, function (player, enemy) {
-            player.score += this.lagTime;
-            game.time.events.remove(enemy.shoot);
-            enemy.body = null;
-            enemy.animations.play('die', null, false, true);
-            this.enemyDieFX.play();
+            if (!player.dying) {
+                player.score += this.lagTime;
+                game.time.events.remove(enemy.shoot);
+                enemy.body = null;
+                enemy.animations.play('die', null, false, true);
+                this.enemyDieFX.play();
+            }
         }, null, this);
         game.physics.arcade.collide(this.bullets, this.layerFg, killBullet);
-        game.physics.arcade.collide(this.player, this.bullets, function(player, bullet) {
-            player.score = 0;
-            player.kill();
-            bullet.kill();
-        });
         game.physics.arcade.collide(this.bots, this.bullets, function(player, bullet) {
             player.score = 0;
             player.kill();
             bullet.kill();
         });
 
-        if (this.player) {
+        game.physics.arcade.collide(this.player, this.layerFg);
+
+        game.physics.arcade.collide(this.player, this.enemies, function (player, enemy) {
+            if (!this.player.dying) {
+                player.score += this.lagTime;
+                game.time.events.remove(enemy.shoot);
+                enemy.body = null;
+                enemy.animations.play('die', null, false, true);
+                this.enemyDieFX.play();
+            }
+        }, null, this);
+
+        game.physics.arcade.collide(this.player, this.bullets, function(player, bullet) {
+            bullet.kill();
+            player.score = 0;
+            player.dying = true;
+            player.body.velocity = { x: 0, y: 0 };
+            player.animations.play('die', null, false, true);
+        });
+
+        if (this.player && !this.player.dying) {
             //Checking input
             this.player.body.velocity.x = 0;
 
@@ -225,23 +235,21 @@
                 setLagPosition(this.player);
                 this.lagTimer = 0;
             }
+        }
 
-            //Checking victory-lose conditions
+        //Checking victory-lose conditions
+        if (this.enemies.countLiving() === 0) {
+            game.state.start('credits');
+        }
 
-            //Checking victory conditions
-            if (this.enemies.countLiving() === 0) {
-                game.state.start('credits');
-            }
-
-            if (!this.player.alive) {
-                game.state.start('play');
-            }
+        if (!this.player.alive) {
+            game.state.start('play');
         }
     };
 
     LAGMAN.Level.prototype.getCurrentLag = function (game) {
         this.lagTime = game.rnd.integerInRange(300, 3000);
-        //this.lagTime = 0;
+        this.lagTime = 0;
         return this.lagTime;
     };
 
